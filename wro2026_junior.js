@@ -87,14 +87,9 @@ function turn(deg, speed) {
 function pivot(deg, speed) {
     speed = speed || 40;
     var target = cm2deg(2 * Math.PI * TRACK * Math.abs(deg) / 360);
-    var back = speed < 0;
+    var m = deg > 0 ? mL : mR, e = deg > 0 ? encL : encR;
     resetEnc();
-    while (avgEnc() * 2 < target * 2) {
-        if (deg > 0) { mL.setPower(speed); mR.setPower(0); }
-        else         { mR.setPower(speed); mL.setPower(0); }
-        if (Math.max(Math.abs(encL.read()), Math.abs(encR.read())) >= target) break;
-        script.wait(5);
-    }
+    while (Math.abs(e.read()) < target) { m.setPower(speed); script.wait(5); }
     stop();
 }
 
